@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0d1b22;
+    color: #fffae2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0d1b22;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3b657a;
+    border-radius: 3px;
+  }
+}
+
+@layer utilities {
+  /* Danger card gradient — used via inline style since Tailwind can't interpolate arbitrary gradients */
+  .bg-status-danger-gradient {
+    background: linear-gradient(145deg, #2a0a0a 0%, #1a1020 40%, #0d1f2e 100%);
+  }
+}

@@ -1,0 +1,39 @@
+# Dependências do Frontend (a pasta mais pesada!)
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Dependências do Backend
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.env
+*.so
+
+# Docker
+*.tar
+*.tar.gz
+
+# Dados gerados (CSVs, etc)
+*.csv
+app/data/*.csv
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
