@@ -1,6 +1,5 @@
 import { clsx } from "clsx";
 
-// Re-export clsx for convenience
 export { clsx as cn };
 
 // ─── Vibration helpers ────────────────────────────────────────────────────────
@@ -26,7 +25,6 @@ export function getVibrationStatus(value, status) {
   return "OK";
 }
 
-/** Returns a readable insight string based on vibration level. */
 export function getInsightMessage(vibracao, status) {
   const level = getVibrationStatus(vibracao, status);
   if (level === "CRÍTICO") return "Nível Crítico: Parada Imediata Recomendada";

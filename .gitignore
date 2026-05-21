@@ -37,3 +37,21 @@ desktop.ini
 # Logs
 *.log
 logs/
+# Modelos treinados
+*.pkl
+*.joblib
+models/
+# Banco de dados
+*.db
+*.sqlite
+*.sqlite3
+# Logs
+logs/
+*.log
+# Ambiente virtual
+venv/
+env/
+.venv/
+# IDE
+.vscode/
+.idea/
