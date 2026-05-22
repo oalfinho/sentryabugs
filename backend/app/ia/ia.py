@@ -23,14 +23,14 @@ class VibrationAI:
         self.anomaly_history: List[Dict] = []
 
     def extract_features(self, sensor_data: Dict) -> np.ndarray:
-        vib  = float(sensor_data.get("vib_rms",    sensor_data.get("vibracao", 0)) or 0)
-        temp = float(sensor_data.get("temp",        sensor_data.get("temperatura", 25)) or 25)
         ax   = float(sensor_data.get("acc_x",  0) or 0)
         ay   = float(sensor_data.get("acc_y",  0) or 0)
         az   = float(sensor_data.get("acc_z",  1) or 1)
         gx   = float(sensor_data.get("gyro_x", 0) or 0)
         gy   = float(sensor_data.get("gyro_y", 0) or 0)
-        return np.array([vib, temp, ax, ay, az, gx, gy])
+        gz   = float(sensor_data.get("gyro_z", 0) or 0)
+        vib  = float(sensor_data.get("vib_rms",    sensor_data.get("vibracao", 0)) or 0)
+        return np.array([ax, ay, az, gx, gy, gz, vib])
 
     def build_feature_matrix(self, df: pd.DataFrame) -> np.ndarray:
         feature_cols = ["acc_x", "acc_y", "acc_z", "gyro_x", "gyro_y", "gyro_z", "vibration_rms"]
