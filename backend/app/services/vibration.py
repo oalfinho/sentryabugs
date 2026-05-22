@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 from collections import deque
 from app.services.telegram import telegram
 from app.sqlite.sqlite import sqlite_storage
-from app.enum.enum import StatusSensor
+from app.enum.enums import StatusSensor
 from app.core.config import settings
 from app.log.logger import log
 from app.ia.ia import ia
