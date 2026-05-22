@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { Trash2 } from "lucide-react";
 
 const LEVEL_STYLES = {
   danger: {
@@ -19,8 +20,9 @@ const LEVEL_STYLES = {
 };
 
 function EventItem({ event, faded = false }) {
-  const s = LEVEL_STYLES[event.level] ?? LEVEL_STYLES.warn;
-  const time = event.timestamp
+  if (!event) return null;
+  const s = LEVEL_STYLES[event?.level] ?? LEVEL_STYLES.warn;
+  const time = event?.timestamp
     ? new Date(event.timestamp).toLocaleTimeString("pt-BR")
     : "";
 
@@ -35,17 +37,18 @@ function EventItem({ event, faded = false }) {
       <span className="mt-0.5 text-base">{s.icon}</span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <p className={`text-[13px] font-semibold ${s.text}`}>{event.title}</p>
+          <p className={`text-[13px] font-semibold ${s.text}`}>
+            {event?.title}
+          </p>
           <span className="shrink-0 font-mono text-[10px] text-brand-muted">
             {time}
           </span>
         </div>
         <p className="mt-0.5 font-mono text-[11px] text-brand-muted">
-          {event.desc}
+          {event?.desc}
         </p>
       </div>
 
-      {/* Degradê cobrindo o 3º card */}
       {faded && (
         <div
           className="pointer-events-none absolute inset-0 rounded-lg"
@@ -59,18 +62,13 @@ function EventItem({ event, faded = false }) {
   );
 }
 
-/**
- * EventsList — exibe os 3 eventos mais recentes com "ver mais".
- * O 3º card tem efeito de degradê para indicar que há mais eventos.
- * Sem event_permanent — baseado puramente nos eventos acumulados no hook.
- */
-export function EventsList({ events = [] }) {
+export function EventsList({ events = [], onClear }) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
 
-  const recent = [...events].reverse();
+  // filter(Boolean) remove qualquer null/undefined antes de processar
+  const recent = [...events].filter(Boolean).reverse();
   const VISIBLE = 3;
-
-  // Slice para exibição
   const visible = expanded ? recent : recent.slice(0, VISIBLE);
   const hasMore = recent.length > VISIBLE;
 
@@ -80,11 +78,46 @@ export function EventsList({ events = [] }) {
         <p className="text-[11px] font-bold uppercase tracking-[.08em] text-brand-muted">
           Histórico de Eventos
         </p>
-        {events.length > 0 && (
-          <span className="rounded-full border border-brand-border px-2 py-0.5 font-mono text-[10px] text-brand-muted">
-            {events.length} total
-          </span>
-        )}
+
+        <div className="flex items-center gap-2">
+          {events.length > 0 && (
+            <span className="rounded-full border border-brand-border px-2 py-0.5 font-mono text-[10px] text-brand-muted">
+              {events.length} total
+            </span>
+          )}
+
+          {events.length > 0 &&
+            (confirmClear ? (
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-[10px] text-brand-muted">
+                  Limpar?
+                </span>
+                <button
+                  onClick={() => {
+                    onClear?.();
+                    setConfirmClear(false);
+                  }}
+                  className="rounded px-2 py-0.5 font-mono text-[10px] text-red-400 hover:bg-red-950/30"
+                >
+                  Sim
+                </button>
+                <button
+                  onClick={() => setConfirmClear(false)}
+                  className="rounded px-2 py-0.5 font-mono text-[10px] text-brand-muted hover:bg-white/[0.04]"
+                >
+                  Não
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmClear(true)}
+                className="flex items-center gap-1 rounded px-2 py-0.5 text-brand-muted transition-colors hover:bg-red-950/20 hover:text-red-400"
+              >
+                <Trash2 size={11} />
+                <span className="font-mono text-[10px]">Limpar</span>
+              </button>
+            ))}
+        </div>
       </div>
 
       {recent.length === 0 ? (
@@ -102,7 +135,7 @@ export function EventsList({ events = [] }) {
             const isLastVisible = idx === VISIBLE - 1 && !expanded && hasMore;
             return (
               <EventItem
-                key={ev.id ?? `${ev.timestamp}-${ev.sensor_id}-${idx}`}
+                key={ev?.id ?? `${ev?.timestamp}-${ev?.sensor_id}-${idx}`}
                 event={ev}
                 faded={isLastVisible}
               />
