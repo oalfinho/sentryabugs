@@ -1,124 +1,61 @@
 "use client";
 
-import {
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  AlertTriangle,
-  AlertCircle,
-  Eye,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 
 const statusConfig = {
-  critico: {
-    badge: "bg-[#A51F3D] text-[#FFFAE2]",
-
-    label: "Crítico",
-  },
-
-  "falha-progressiva": {
-    badge: "bg-[#5E4D20] text-[#FFFAE2]",
-
-    label: "Falha progressiva",
-  },
-
-  monitorado: {
-    badge: "bg-[#3B657A] text-[#FFFAE2]",
-
-    label: "Monitorado",
-  },
+  critico:             { badge: "danger", label: "Crítico" },
+  "falha-progressiva": { badge: "warn",   label: "Falha progressiva" },
+  monitorado:          { badge: "info",   label: "Monitorado" },
 };
 
 const trendConfig = {
-  up: {
-    icon: TrendingUp,
-  },
-
-  down: {
-    icon: TrendingDown,
-  },
-
-  stable: {
-    icon: Minus,
-  },
+  up:     { icon: <TrendingUp  size={14} className="text-red-400"    /> },
+  down:   { icon: <TrendingDown size={14} className="text-green-400" /> },
+  stable: { icon: <Minus       size={14} className="text-brand-muted" /> },
 };
 
 export function CriticalTable({ machines }) {
   return (
-    <div className="glass-card rounded-xl p-5">
-      <div className="mb-4 flex gap-3">
-        <div
-          className="
-w-8
-h-8
-rounded-full
-bg-[#A51F3D]
-flex
-items-center
-justify-center
-"
-        >
-          <AlertTriangle
-            className="
-w-4
-h-4
-text-[#FFFAE2]
-"
-          />
+    <Card className="p-5">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-950/40">
+          <AlertTriangle size={14} className="text-red-400" />
         </div>
-
         <div>
-          <h3
-            className="
-text-[#FFFAE2]
-font-bold
-text-lg
-"
-          >
-            Críticos
-          </h3>
-
-          <p
-            className="
-text-[#D9D9D9]
-text-sm
-"
-          >
-            Prioridade máxima
-          </p>
+          <h3 className="text-[14px] font-bold text-brand-cream">Críticos</h3>
+          <p className="font-mono text-[10px] text-brand-muted">Prioridade máxima</p>
         </div>
       </div>
 
-      <table className="w-full">
+      <table className="w-full text-left text-[13px]">
         <thead>
-          <tr>
-            <th>Status</th>
-
-            <th>Máquina</th>
+          <tr className="border-b border-brand-border">
+            {["Status", "Máquina", "Risco", "Tendência"].map((h) => (
+              <th key={h} className="pb-2 font-mono text-[10px] uppercase tracking-[.1em] text-brand-muted">
+                {h}
+              </th>
+            ))}
           </tr>
         </thead>
-
-        <tbody>
-          {machines.map((machine) => {
-            const status =
-              statusConfig[machine.status] || statusConfig.monitorado;
-
+        <tbody className="divide-y divide-brand-border">
+          {machines.map((m) => {
+            const s = statusConfig[m.status] ?? statusConfig.monitorado;
+            const t = trendConfig[m.trend]  ?? trendConfig.stable;
             return (
-              <tr key={machine.id}>
-                <td>
-                  <Badge className={status.badge}>{status.label}</Badge>
+              <tr key={m.id} className="hover:bg-white/[0.02]">
+                <td className="py-2.5 pr-4">
+                  <Badge variant={s.badge}>{s.label}</Badge>
                 </td>
-
-                <td>
-                  <p>{machine.machine}</p>
-                </td>
+                <td className="py-2.5 pr-4 font-mono text-brand-cream">{m.machine}</td>
+                <td className="py-2.5 pr-4 font-mono text-brand-cream">{m.risk}%</td>
+                <td className="py-2.5">{t.icon}</td>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }
