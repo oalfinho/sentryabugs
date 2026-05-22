@@ -164,7 +164,6 @@ export function VibrationChart({ history, isAnomaly, status }) {
           },
           y: {
             min: 0,
-            max: 520,
             grid: { color: "rgba(59,101,122,0.1)", drawBorder: false },
             ticks: {
               color: "#8aacba",
@@ -186,7 +185,6 @@ export function VibrationChart({ history, isAnomaly, status }) {
     if (!chartRef.current || !history.length) return;
 
     const now = Date.now();
-    // Atualiza no máximo a cada 100ms para melhor performance
     if (now - lastUpdateRef.current < 100) return;
     lastUpdateRef.current = now;
 
@@ -205,6 +203,9 @@ export function VibrationChart({ history, isAnomaly, status }) {
     ds.data = values;
     ds.pointBackgroundColor = colors;
     ds.pointBorderColor = colors;
+
+    const maxVal = Math.max(...values, SAFE_LIMIT + 1);
+    chartRef.current.options.scales.y.max = Math.ceil(maxVal * 1.2);
 
     if (status === "CRITICO") {
       ds.borderColor = "rgba(229,83,83,0.85)";
