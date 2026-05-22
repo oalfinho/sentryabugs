@@ -1,17 +1,26 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useClock } from "@/hooks/useClock";
-import { useNavTab } from "@/hooks/useNavTab";
+
+// Cada tab tem um label e uma rota real do Next.js
+const TABS = [
+  { label: "Visão Geral", href: "/dashboard" },
+  { label: "Máquinas", href: "/dashboard/maquinas" },
+  { label: "Histórico", href: "/dashboard/historico" },
+  { label: "Alertas", href: "/dashboard/alertas" },
+];
 
 export function TopNav() {
   const time = useClock();
-  const { active, setActive, tabs } = useNavTab();
+  const pathname = usePathname(); // lê a URL atual — ex: "/dashboard/maquinas"
 
   return (
     <nav className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-accent/30 bg-bg-tertiary px-6">
-      {/* Logo — centralizada verticalmente, alinhada à esquerda, tamanho controlado */}
+      {/* Logo */}
       <div className="flex items-center">
         <img
           src="/sentrya.png"
@@ -21,22 +30,31 @@ export function TopNav() {
         />
       </div>
 
-      {/* Tabs — centro */}
+      {/* Tabs — agora são Links reais */}
       <div className="flex gap-1 rounded-xl bg-white/[0.03] p-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActive(tab)}
-            className={cn(
-              "rounded-lg px-4 py-1.5 text-[13px] font-semibold transition-all duration-200 font-sans",
-              active === tab
-                ? "bg-card-dark text-brand-cream shadow-[0_0_0_1px_rgba(59,101,122,0.35)]"
-                : "text-brand-muted hover:text-brand-cream",
-            )}
-          >
-            {tab}
-          </button>
-        ))}
+        {TABS.map((tab) => {
+          // Considera ativa se a URL atual começa com o href do tab
+          // Exceção: "Visão Geral" só ativa se for exatamente /dashboard
+          const isActive =
+            tab.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname.startsWith(tab.href);
+
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={cn(
+                "rounded-lg px-4 py-1.5 text-[13px] font-semibold font-sans transition-all duration-200",
+                isActive
+                  ? "bg-card-dark text-brand-cream shadow-[0_0_0_1px_rgba(59,101,122,0.35)]"
+                  : "text-brand-muted hover:text-brand-cream",
+              )}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
       </div>
 
       {/* Right side */}
