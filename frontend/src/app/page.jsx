@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-// "/" redireciona automaticamente
-export default function rootPage() {
+export default function RootPage() {
   redirect("/dashboard");
 }

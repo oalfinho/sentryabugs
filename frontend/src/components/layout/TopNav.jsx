@@ -6,9 +6,8 @@ import { Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useClock } from "@/hooks/useClock";
 
-// Cada tab tem um label e uma rota real do Next.js
 const TABS = [
-  { label: "Visão Geral", href: "/dashboard" },
+  { label: "Painel Geral", href: "/dashboard" },
   { label: "Máquinas", href: "/dashboard/maquinas" },
   { label: "Histórico", href: "/dashboard/historico" },
   { label: "Alertas", href: "/dashboard/alertas" },
@@ -16,7 +15,7 @@ const TABS = [
 
 export function TopNav() {
   const time = useClock();
-  const pathname = usePathname(); // lê a URL atual — ex: "/dashboard/maquinas"
+  const pathname = usePathname();
 
   return (
     <nav className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-accent/30 bg-bg-tertiary px-6">
@@ -25,16 +24,14 @@ export function TopNav() {
         <img
           src="/sentrya.png"
           alt="Sentrya"
-          className="h-8 w-auto object-contain"
-          style={{ maxWidth: "120px" }}
+          className="h-12 w-auto object-contain"
+          style={{ maxWidth: "200px" }}
         />
       </div>
 
-      {/* Tabs — agora são Links reais */}
+      {/* Tabs */}
       <div className="flex gap-1 rounded-xl bg-white/[0.03] p-1">
         {TABS.map((tab) => {
-          // Considera ativa se a URL atual começa com o href do tab
-          // Exceção: "Visão Geral" só ativa se for exatamente /dashboard
           const isActive =
             tab.href === "/dashboard"
               ? pathname === "/dashboard"
@@ -70,10 +67,13 @@ export function TopNav() {
           </span>
         </div>
 
-        <button className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-accent/35 bg-card transition-colors hover:bg-card-dark">
+        <Link
+          href="/dashboard/alertas"
+          className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-accent/35 bg-card transition-colors hover:bg-card-dark"
+        >
           <Bell size={16} className="text-brand-muted" />
           <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full border-[1.5px] border-bg-tertiary bg-status-danger" />
-        </button>
+        </Link>
       </div>
     </nav>
   );

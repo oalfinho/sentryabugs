@@ -168,7 +168,8 @@ export function VibrationChart({ history, isAnomaly, status }) {
             ticks: {
               color: "#8aacba",
               font: { family: "JetBrains Mono", size: 9 },
-              stepSize: 100,
+              // stepSize: 100
+              maxTicksLimit: 6,
               callback: (value) => `${value}`,
             },
             border: { color: "rgba(59,101,122,0.2)" },
@@ -184,9 +185,9 @@ export function VibrationChart({ history, isAnomaly, status }) {
   useEffect(() => {
     if (!chartRef.current || !history.length) return;
 
-    const now = Date.now();
-    if (now - lastUpdateRef.current < 100) return;
-    lastUpdateRef.current = now;
+    // const now = Date.now();
+    // if (now - lastUpdateRef.current < 100) return;
+    // lastUpdateRef.current = now;
 
     const ds = chartRef.current.data.datasets[0];
     const values = history.map((p) => p.value);
@@ -204,9 +205,6 @@ export function VibrationChart({ history, isAnomaly, status }) {
     ds.pointBackgroundColor = colors;
     ds.pointBorderColor = colors;
 
-    const maxVal = Math.max(...values, SAFE_LIMIT + 1);
-    chartRef.current.options.scales.y.max = Math.ceil(maxVal * 1.2);
-
     if (status === "CRITICO") {
       ds.borderColor = "rgba(229,83,83,0.85)";
       ds.backgroundColor = "rgba(229,83,83,0.08)";
@@ -218,7 +216,13 @@ export function VibrationChart({ history, isAnomaly, status }) {
       ds.backgroundColor = "rgba(59,201,160,0.08)";
     }
 
-    chartRef.current.update("none"); // "none" para atualizar sem animação
+    const maxVal = Math.max(...values);
+    const newMax = Math.ceil(maxVal * 1.3, SAFE_LIMIT * 0.2);
+
+    chartRef.current.options.scales.y.max = newMax;
+    chartRef.current.options.scales.y.suggestedMax = newMax;
+    chartRef.current.resetZoom?.();
+    chartRef.current.update("active");
   }, [history, isAnomaly]);
 
   const latestValue =
