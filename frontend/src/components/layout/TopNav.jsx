@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useClock } from "@/hooks/useClock";
 
@@ -24,8 +23,8 @@ export function TopNav() {
         <img
           src="/sentrya.png"
           alt="Sentrya"
-          className="h-12 w-auto object-contain"
-          style={{ maxWidth: "200px" }}
+          className="h-24 w-auto object-contain"
+          style={{ maxWidth: "260px" }}
         />
       </div>
 
@@ -67,13 +66,6 @@ export function TopNav() {
           </span>
         </div>
 
-        <Link
-          href="/dashboard/alertas"
-          className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-accent/35 bg-card transition-colors hover:bg-card-dark"
-        >
-          <Bell size={16} className="text-brand-muted" />
-          <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full border-[1.5px] border-bg-tertiary bg-status-danger" />
-        </Link>
       </div>
     </nav>
   );
